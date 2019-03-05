@@ -9,10 +9,18 @@ export default class Biggums extends Enemy{
     this.radius=args.radius+10
     this.speed=args.speed-1
   }
+
+  stun = () => {
+    this.oldSpeed=this.speed
+    this.speed=0
+    setTimeout(()=>{
+      this.speed=this.oldSpeed
+    }, 500)
+  }
+
   die = (killed) => {
     store.getState().gamestate.music.playHit()
     if (!killed){
-      console.log("Not fuck")
       this.health=this.health-1;
       if (this.health===0){
         this.alive=false
@@ -20,9 +28,9 @@ export default class Biggums extends Enemy{
       }else{
         this.radius=this.radius-5;
         this.speed=this.speed+1
+        this.stun()
       }
     }else{
-      console.log("FUCK")
       this.alive=false
       this.radius=0
     }

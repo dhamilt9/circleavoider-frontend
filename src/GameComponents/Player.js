@@ -31,22 +31,38 @@ export default class Player extends GamePiece{
     switch(type){
       case 0:
         this.maxSpeed+=1.5
-        console.log("speed")
+        store.dispatch({type: "SET_MESSAGE", message: "+SPEED"})
+        store.dispatch({type: "TOGGLE_MESSAGE"})
+        setTimeout(() => {
+          store.dispatch({type: "TOGGLE_MESSAGE"})
+        }, 2000)
         break;
       case 1:
         this.health+=1
-        console.log("health")
+        store.dispatch({type: "SET_MESSAGE", message: "+HEALTH"})
+        store.dispatch({type: "TOGGLE_MESSAGE"})
+        setTimeout(() => {
+          store.dispatch({type: "TOGGLE_MESSAGE"})
+        }, 2000)
         break;
       case 2:
         store.dispatch({type: "INCREASE_POINTS", amount: 50})
-        console.log("points")
+        store.dispatch({type: "SET_MESSAGE", message: "+POINTS"})
+        store.dispatch({type: "TOGGLE_MESSAGE"})
+        setTimeout(() => {
+          store.dispatch({type: "TOGGLE_MESSAGE"})
+        }, 2000)
         break;
       case 3:
-        this.shotspeed-=200
+        store.dispatch({type: "SET_MESSAGE", message: "+SHOTSPEED"})
+        store.dispatch({type: "TOGGLE_MESSAGE"})
+        setTimeout(() => {
+          store.dispatch({type: "TOGGLE_MESSAGE"})
+        }, 2000)
+        this.shotspeed-=100
         if (this.shotspeed<200){
           this.shotspeed=200
         }
-        console.log("shotspeed")
         break;
       default:
         break

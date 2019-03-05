@@ -9,7 +9,6 @@ export default class Enemy extends GamePiece{
   constructor(args){
     super(args)
     this.cycle=0
-    this.cycleLength=args.cycleLength
     this.color="red"
     this.radius=15
     this.speed=(1+3*Math.random()+store.getState().gamestate.level)/2

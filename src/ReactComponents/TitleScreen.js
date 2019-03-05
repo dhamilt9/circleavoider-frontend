@@ -15,7 +15,7 @@ export default class TitleScreen extends Component {
             <p>Created By Dan Hamilton</p>
             <p>Featuring:</p>
             <p>Stunning 60fps gameplay</p>
-            <p>4 unique enemies</p>
+            <p>5 unique enemies</p>
             <p>4 game changing powerups</p>
             <p>State of the art highscore system</p>
             <p>Original musical score by Dan Hamilton</p>

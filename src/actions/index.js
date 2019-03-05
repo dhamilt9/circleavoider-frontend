@@ -125,3 +125,12 @@ export const incrementLevel = () => ({
 export const resetGame = () => ({
   type: 'RESET_GAME'
 })
+
+export const toggleMessage = () => ({
+  type: 'TOGGLE_MESSAGE'
+})
+
+export const setMessage = (message) => ({
+  type: 'SET_MESSAGE',
+  message
+})

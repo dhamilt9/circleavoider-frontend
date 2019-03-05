@@ -5,6 +5,7 @@ export default class MusicHandler{
     this.hit=new Audio('hit.wav')
     this.gameOver=new Audio('gameover.wav')
     this.pickup=new Audio('collect.wav')
+    this.enemyshot=new Audio('shoot2.wav')
 
 
     this.music.addEventListener('timeupdate', function(){
@@ -38,5 +39,9 @@ export default class MusicHandler{
 
   playPickup = () => {
     this.pickup.play()
+  }
+
+  playEnemyShot = () => {
+    this.enemyshot.play()
   }
 }

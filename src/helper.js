@@ -41,13 +41,25 @@ export const handlePlayerEnemyCollision = (player, enemies) => {
 }
 
 export const handleBulletCollision = (player, enemies, increasePoints) => {
+  let bulletArray=[]
   enemies.forEach((enemy) => {
     player.bullets.forEach((bullet) => {
       if (checkCollision(enemy, bullet)){
-        enemy.die(false)
+        bulletArray=(enemy.die(false))
         bullet.die()
       }
     })
+  })
+  return bulletArray
+}
+
+export const handleEnemyBulletCollision = (bullets, player) => {
+  bullets.forEach((bullet)=>{
+    if (checkCollision(bullet, player)){
+      player.takeDamage(1)
+      bullet.die()
+      store.getState().gamestate.music.playHit()
+    }
   })
 }
 

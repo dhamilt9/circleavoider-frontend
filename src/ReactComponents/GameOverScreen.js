@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 class GameOverScreen extends Component {
   render() {
     return (
-      <div>
-        <span className="centerScreen title">Game Over</span>
-        <div id="title-button-bar">
-          <Button className="mr-3" onClick={this.props.reset}>
+      <div className="overlay-container">
+        <div className="overlay-div">
+          <h1>GAME OVER</h1>
+          <Button className="mr-1" onClick={this.props.reset}>
             Reset
           </Button>
           <Button disabled={this.props.saved===0 ? false : true} onClick={this.props.saveScore}>

@@ -12,6 +12,10 @@ export default class Bullet {
         this.delete = false;
         this.direction = args.direction;
         this.alive = true;
+        this.color=args.color
+        if(!this.color){
+          this.color="yellow"
+        }
     }
 
     die = (player) => {
@@ -29,7 +33,7 @@ export default class Bullet {
         const context=canvas.context
         context.save();
         context.translate(this.position.x, this.position.y);
-        context.fillStyle = '#FF0';
+        context.fillStyle = this.color;
         context.lineWidth = 0.5;
         context.beginPath();
         context.arc(0, 0, 3, 0, 2 * Math.PI);

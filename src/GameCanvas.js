@@ -3,14 +3,17 @@ import TitleScreen from './ReactComponents/TitleScreen';
 import GameOverScreen from './ReactComponents/GameOverScreen';
 import Highscores from './ReactComponents/Highscores'
 import MyHighscores from './ReactComponents/MyHighscores'
+import Message from './ReactComponents/Message'
 import Player from './GameComponents/Player.js'
+import Cursor from './GameComponents/Cursor.js'
 import Enemy from './GameComponents/Enemy.js'
 import Curver from './GameComponents/Curver.js'
 import Stopper from './GameComponents/Stopper.js'
+import Sploder from './GameComponents/Sploder.js'
 import Biggums from './GameComponents/Biggums.js'
 import Display from './GameComponents/Display.js'
 import PowerUp from './GameComponents/PowerUp.js'
-import {  handleBulletCollision, handlePlayerEnemyCollision, getRandomInt, handlePowerUpCollision } from './helper'
+import {  handleBulletCollision, handlePlayerEnemyCollision, getRandomInt, handlePowerUpCollision, handleEnemyBulletCollision } from './helper'
 import { connect } from 'react-redux'
 import { setGamestateId, setContext, incrementFrame, incrementLevel, resetGame, setGameId, scoreNotSaved, scoreSaved, scoreSaving } from './actions'
 import {Route, withRouter} from 'react-router-dom'
@@ -28,7 +31,10 @@ class GameCanvas extends Component {
     this.player = null
     this.display = null
     this.enemies = []
+    this.enemyBullets = []
     this.powerups = []
+    this.cursor = new Cursor()
+    this.cursorStyle={cursor:'default'}
   }
   componentDidMount() {
     this.props.input.bindKeys();
@@ -65,6 +71,7 @@ class GameCanvas extends Component {
 
   startGame = () => {
     this.props.music.playMusic()
+    this.cursorStyle={cursor:'none'}
 
     let player = new Player({
       position: {
@@ -123,10 +130,9 @@ class GameCanvas extends Component {
     this.powerups.push(new PowerUp({position: powerupPosition}))
   }
 
-  spawnEnemy = () => {
+  calcuateEnemySpawnPosition = () => {
     let enemyX = this.props.canvas.width*Math.random()
     let enemyY = this.props.canvas.height*Math.random()
-    let enemySpeed = (1+3*Math.random()+this.props.level)/2
 
     switch(getRandomInt(4)){
       case 0:
@@ -145,7 +151,13 @@ class GameCanvas extends Component {
         break
     }
     let enemyPosition={x: enemyX, y: enemyY}
-    let myRandomInt=getRandomInt(4)
+    return enemyPosition
+  }
+
+  spawnEnemy = () => {
+    let enemySpeed = (1+3*Math.random()+this.props.level)/2
+    let enemyPosition=this.calcuateEnemySpawnPosition()
+    let myRandomInt=getRandomInt(5)
     switch(myRandomInt){
       case 0:
         let newEnemy=new Enemy({
@@ -186,6 +198,17 @@ class GameCanvas extends Component {
           alive: true
         }))
         break
+      case 4:
+        this.enemies.push(new Sploder({
+          position: enemyPosition,
+          speed: (1+3*Math.random()+this.props.level)/2,
+          radius: 15,
+          turnspeed: 5,
+          health: 5,
+          direction: enemySpeed,
+          alive: true
+        }))
+        break
       default:
         break
     }
@@ -193,6 +216,7 @@ class GameCanvas extends Component {
 
   checkDeath = () => {
     if (this.player.health<=0){
+      this.cursorStyle={cursor:'default'}
       this.player.hitmarker=false
       this.props.setGamestateId(2)
       this.props.music.stopMusic()
@@ -220,7 +244,7 @@ class GameCanvas extends Component {
         if (this.props.frame%100===0 && (this.enemies.length<3+this.props.level)){
           this.spawnEnemy()
         }
-        if (this.props.points%50===0 & this.props.points!==0 & this.powerups.length<this.props.points/50){
+        if (this.props.points%100===0 & this.props.points!==0 & this.powerups.length<this.props.points/100){
           this.spawnPowerUp()
         }
         if (this.props.frame%500===0 & this.props.frame!==0){
@@ -228,9 +252,13 @@ class GameCanvas extends Component {
         }
         this.player.update(keys, joystick, mouseClick);
         this.player.render();
+        this.cursor.update(mouseClick)
         this.enemies.forEach((enemy)=>{
           enemy.setDirection(this.player)
-          enemy.update()
+          let enemybullet=enemy.update(this.player)
+          if (enemybullet!=undefined){
+            this.enemyBullets.push(enemybullet)
+          }
           enemy.render()
         })
         this.powerups.forEach((powerup)=>{
@@ -238,9 +266,25 @@ class GameCanvas extends Component {
             powerup.render()
           }
         })
+        this.enemyBullets=this.enemyBullets.filter((bullet)=>{
+          return bullet.alive===true
+        })
+        this.enemyBullets.forEach((bullet)=>{
+          bullet.update()
+          bullet.render()
+        })
+        handleEnemyBulletCollision(this.enemyBullets, this.player)
+        this.cursor.render()
         handlePowerUpCollision(this.player, this.powerups)
         handlePlayerEnemyCollision(this.player, this.enemies)
-        handleBulletCollision(this.player, this.enemies, this.increasePoints)
+        let explosion=handleBulletCollision(this.player, this.enemies, this.increasePoints)
+        if (explosion){
+          if (explosion.length>0){
+            explosion.forEach((bullet)=>{
+              this.enemyBullets.push(bullet)
+            })
+          }
+        }
         this.removeDeadEnemies()
       }
       if (this.display !== undefined && this.display !== null){
@@ -253,12 +297,14 @@ class GameCanvas extends Component {
   render(){
     return(
       <div>
-        { this.props.gameState === GameState.StartScreen && <Route exact path="/" render={() => (<TitleScreen startGame={this.startGame}/>)} />}
+        { this.props.gameState === GameState.StartScreen && <Route exact path="/" render={() => (<TitleScreen startGame={this.startGame}/>)} /> }
         { this.props.gameState === GameState.GameOver && <Route exact path="/" render={() => (<GameOverScreen reset={this.reset} saveScore={this.saveScore}/>)} />}
+        <Message />
         <Route exact path="/highscores" render={() => <Highscores />}></Route>
         {!(Object.entries(this.props.user).length === 0 && this.props.user.constructor === Object) && <Route exact path="/myhighscores" render={() => <MyHighscores />}></Route>}
         <canvas
           ref="canvas"
+          style={this.cursorStyle}
           width={ this.props.canvas.width * this.props.canvas.ratio }
           height={ this.props.canvas.height * this.props.canvas.ratio }
         />

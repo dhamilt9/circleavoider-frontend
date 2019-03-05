@@ -29,17 +29,20 @@ canvas {
   position: absolute;
   z-index: 1;
   width: 100%;
+  user-select: none;
 }
 .title {
   top: 20%;
   color: green;
   font-size: 5vw;
+  user-select: none;
 }
 
 .byline {
   top: 33%;
   font-size: 2vw;
   color: #ffffff;
+  user-select: none;
 }
 
 #title-button-bar{
@@ -47,6 +50,7 @@ canvas {
   width:100%;
   text-align:center;
   position:absolute;
+  user-select: none;
 }
 
 #high-scores{
@@ -54,20 +58,24 @@ canvas {
   top:40%;
   position: absolute;
   text-align: center;
+  user-select: none;
 }
 
 #high-scores-container{
   text-align: left;
   display: inline-block;
   margin: auto;
+  user-select: none;
 }
 
 #high-scores p{
   color: white;
+  user-select: none;
 }
 
 #high-scores h1{
   color: white;
+  user-select: none;
 }
 
 a.nav-link{
@@ -81,10 +89,34 @@ a.nav-link{
   width:100%;
   text-align: center;
   color: white;
+  user-select: none;
 }
 
 .overlay-div{
   display: inline-block;
   padding-top: 5%;
   margin: auto;
+  user-select: none;
+}
+
+.message-container{
+  position:absolute;
+  width:100%;
+  text-align: center;
+  color: white;
+  user-select: none;
+  pointer-events: none;
+}
+
+.message-div{
+  display: inline-block;
+  padding-top: 5%;
+  margin: auto;
+  user-select: none;
+  pointer-events: none;
+}
+.message{
+  font-size:60px;
+  user-select: none;
+  pointer-events: none;
 }
