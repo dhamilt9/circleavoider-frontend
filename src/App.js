@@ -1,28 +1,57 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import GameCanvas from './GameCanvas.js'
+import NavBar from './ReactComponents/NavBar.js'
+import { withRouter } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { login, tokenLogin, clearUser, register } from './actions'
+
 
 class App extends Component {
+
+  signup = (username, password, confirmpassword) => {
+    if (password===confirmpassword){
+      this.props.register(username, password)
+    }else{
+      console.log("Passwords do not match")
+    }
+  }
+  logout = (event) => {
+    event.preventDefault()
+    this.props.clearUser()
+    localStorage.removeItem("token")
+    this.props.history.push('/')
+  }
+
+  login = (username, password) => {
+    this.props.login(username, password)
+  }
+
+  componentDidMount(){
+    let token = localStorage.getItem("token")
+    if(token){
+      this.props.tokenLogin(token)
+    }
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <NavBar login={this.login} signup={this.signup} logout={this.logout} user={this.props.user}/>
+        <GameCanvas user={this.props.user} />
       </div>
     );
   }
 }
+const mapDispatchToProps = dispatch => ({
+  login: (username, password) => dispatch(login(username, password)),
+  register: (username, password) => dispatch(register(username, password)),
+  tokenLogin: (token) => dispatch(tokenLogin(token)),
+  clearUser: () => dispatch(clearUser())
+})
 
-export default App;
+const mapStateToProps = state => ({
+  user: state.user.user
+})
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

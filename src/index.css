@@ -1,14 +1,90 @@
+@import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
+
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: 'Press Start 2P', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+.pagination{
+  margin-bottom:0px;
+}
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+canvas {
+  display: block;
+  background-color: #000000;
+  margin-left: auto;
+  margin-right: auto;
+}
+.centerScreen {
+  text-align: center;
+  display: block;
+  position: absolute;
+  z-index: 1;
+  width: 100%;
+}
+.title {
+  top: 20%;
+  color: green;
+  font-size: 5vw;
+}
+
+.byline {
+  top: 33%;
+  font-size: 2vw;
+  color: #ffffff;
+}
+
+#title-button-bar{
+  top:70%;
+  width:100%;
+  text-align:center;
+  position:absolute;
+}
+
+#high-scores{
+  width:100%;
+  top:40%;
+  position: absolute;
+  text-align: center;
+}
+
+#high-scores-container{
+  text-align: left;
+  display: inline-block;
+  margin: auto;
+}
+
+#high-scores p{
+  color: white;
+}
+
+#high-scores h1{
+  color: white;
+}
+
+a.nav-link{
+  font-size: 12px;
+  position: relative;
+  top:3px;
+}
+
+.overlay-container{
+  position:absolute;
+  width:100%;
+  text-align: center;
+  color: white;
+}
+
+.overlay-div{
+  display: inline-block;
+  padding-top: 5%;
+  margin: auto;
 }
