@@ -1,3 +1,9 @@
+//Listens to keyboard input/mouse and changes instance variable to refelect which keys are pressed, used by other parts of the app whenever they need user input
+//Specifically, stores the state of the arrow keys, W/A/S/D, Space, Enter, Mouse Position, and Mouse Click.
+//Also a justickDirection angle, which is a virtual 8-position joystick that's input is determied by the user directional input.
+//Instance is kept in the store so it can be referenced anywhere
+//Should move this to GameComponents.
+
 const KEY = {
    LEFT:  37,
    RIGHT: 39,
@@ -17,6 +23,12 @@ export default class InputManager{
     this.joystickDirection = null
     this.mouseClick = { clicked: false, x: 0, y: 0 }
   }
+  resetKeys() {
+    this.pressedKeys = { left: 0, right: 0, space: 0, enter: 0, up: 0, down: 0 };
+    this.joystickDirection = null
+    this.mouseClick = { clicked: false, x: 0, y: 0 }
+  }
+  
   bindKeys() {
     window.addEventListener('keyup',   this.handleKeys.bind(this, false));
     window.addEventListener('keydown', this.handleKeys.bind(this, true));

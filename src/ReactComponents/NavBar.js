@@ -1,3 +1,5 @@
+//Login forms and switching between the game and highscores
+
 import React, { Component, Fragment } from 'react';
 import { Navbar, Form, InputGroup, Button, Pagination, Nav } from 'react-bootstrap';
 import { LinkContainer } from "react-router-bootstrap";

@@ -1,3 +1,5 @@
+//Gets a list of global highscores for the game
+
 import React, { Component } from 'react';
 import Highscore from './Highscore'
 

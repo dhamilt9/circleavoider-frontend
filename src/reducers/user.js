@@ -1,3 +1,5 @@
+//Reducer for the user currently logged in.
+
 const user = (state = {user: {}}, action) =>
 {
   switch(action.type){

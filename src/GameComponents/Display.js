@@ -1,3 +1,7 @@
+//Originally used for debugging
+//This is where any text rendered by the canvas rather than react would go
+//Displays the player's health, points, and level.
+
 import store from '../store.js'
 import { provide } from 'js-redux';
 

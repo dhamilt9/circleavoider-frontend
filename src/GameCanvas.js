@@ -1,3 +1,5 @@
+//Runs the main game loop, controlls the canvas, and renders the elements that appear on top of the canvas 
+
 import React, {Component} from 'react';
 import TitleScreen from './ReactComponents/TitleScreen';
 import GameOverScreen from './ReactComponents/GameOverScreen';
@@ -25,7 +27,11 @@ const GameState = {
 };
 
 class GameCanvas extends Component {
-
+	state={
+		cursorStyle: {cursor:'default'}
+	}
+	
+	//Initiate instance variables used in the game
   constructor(){
     super();
     this.player = null
@@ -34,18 +40,21 @@ class GameCanvas extends Component {
     this.enemyBullets = []
     this.powerups = []
     this.cursor = new Cursor()
-    this.cursorStyle={cursor:'default'}
   }
+	
+	//Set up keyboard input event listeners, save canvas context to store
   componentDidMount() {
     this.props.input.bindKeys();
     const context = this.refs.canvas.getContext('2d');
     this.props.setContext(context)
     requestAnimationFrame(() => {this.update()});
   }
+	
   componentWillUnmount() {
     this.props.input.unbindKeys();
   }
 
+	//Action when user desides to save their score. Sends game details to backend
   saveScore = () => {
     let hostName=window.location.hostname
     let data = {score: this.props.points}
@@ -69,9 +78,10 @@ class GameCanvas extends Component {
     })
   }
 
+	//Starts the music, sets up game variables, changes gamestate in store
   startGame = () => {
     this.props.music.playMusic()
-    this.cursorStyle={cursor:'none'}
+    this.setState({cursorStyle: {cursor:'none'}})
 
     let player = new Player({
       position: {
@@ -97,6 +107,7 @@ class GameCanvas extends Component {
     this.props.setGamestateId(GameState.Playing)
   }
 
+	//Wipes the canvas. To be run every frame before render
   clearBackground = () => {
     const context = this.props.canvas.context;
     context.save();
@@ -111,7 +122,9 @@ class GameCanvas extends Component {
     context.globalAlpha = 1;
     context.restore();
   }
-
+	
+	
+	//Iterates through the list of enemies that gets rendered and removes dead enemies
   removeDeadEnemies = () => {
     this.enemies=this.enemies.filter((enemy) => {
       if (enemy.alive){
@@ -122,14 +135,15 @@ class GameCanvas extends Component {
     })
   }
 
-
+	//Spawns a powerup in a random location on the canvas
   spawnPowerUp = () => {
     let powerupX = this.props.canvas.width*Math.random()
     let powerupY = this.props.canvas.height*Math.random()
     let powerupPosition = {x: powerupX, y: powerupY}
     this.powerups.push(new PowerUp({position: powerupPosition}))
   }
-
+	
+	//Returns a spawn position for the enemy along one of the edges of the canvas
   calcuateEnemySpawnPosition = () => {
     let enemyX = this.props.canvas.width*Math.random()
     let enemyY = this.props.canvas.height*Math.random()
@@ -153,7 +167,9 @@ class GameCanvas extends Component {
     let enemyPosition={x: enemyX, y: enemyY}
     return enemyPosition
   }
-
+	
+	//Creates an enemy of a random type, gives it a random speed that scales with current level.
+	//There are surely more elegant ways than a switch statement to do this
   spawnEnemy = () => {
     let enemySpeed = (1+3*Math.random()+this.props.level)/2
     let enemyPosition=this.calcuateEnemySpawnPosition()
@@ -213,50 +229,68 @@ class GameCanvas extends Component {
         break
     }
   }
-
+	
+	//Run every frame. Checks to see if the player is dead based on current health
   checkDeath = () => {
     if (this.player.health<=0){
-      this.cursorStyle={cursor:'default'}
+      this.setState({cursorStyle: {cursor:'default'}})
       this.player.hitmarker=false
       this.props.setGamestateId(2)
       this.props.music.stopMusic()
       this.props.music.playGameOver()
     }
   }
-
+	
+	//Resets all game variables to starting state to prepare for a new game
   reset = () => {
     this.player=null
     this.enemies=[]
     this.powerups=[]
+		this.enemyBullets = []
     this.display=null
     this.props.resetGame()
     this.clearBackground()
+		this.props.input.resetKeys()
   }
-
+	
+	//Main game loop. Preforms all logic and rendering required for one frame of the game, then calls itself to move onto the next frame
   update = (currentDelta) => {
+		
+		//Get the state of the inputs for the frame
     const keys = this.props.input.pressedKeys;
     const joystick = this.props.input.joystickDirection;
     const mouseClick = this.props.input.mouseClick
+		
+		//Player can change the gamestate to Playing by clicking the "begin game" button.
     if (this.props.gameState === GameState.Playing) {
       this.checkDeath()
       this.clearBackground();
       if (this.player !== undefined && this.player !== null) {
+				
+				//Spawn an enemy every 100 frames and the max number of enemies allowed has not been reached.
+				//The max number of enemies allowed starts at 3 and increases every level
         if (this.props.frame%100===0 && (this.enemies.length<3+this.props.level)){
           this.spawnEnemy()
         }
-        if (this.props.points%100===0 & this.props.points!==0 & this.powerups.length<this.props.points/100){
+				
+				//Spawn a powerup every 50 points, but don't spawn multiple!
+        if (this.props.points%50===0 & this.props.points!==0 & this.powerups.length<this.props.points/50){
           this.spawnPowerUp()
         }
+				
+				//Increase the level every 500 frames
         if (this.props.frame%500===0 & this.props.frame!==0){
           this.props.incrementLevel()
         }
+				
+				//.update methods calculate new positions for players, enemies, bullets, and the cursor. .render methods place them on the canvas according to their updated paramaters
         this.player.update(keys, joystick, mouseClick);
         this.player.render();
         this.cursor.update(mouseClick)
         this.enemies.forEach((enemy)=>{
           enemy.setDirection(this.player)
           let enemybullet=enemy.update(this.player)
-          if (enemybullet!=undefined){
+          if (enemybullet!==undefined){
             this.enemyBullets.push(enemybullet)
           }
           enemy.render()
@@ -273,10 +307,13 @@ class GameCanvas extends Component {
           bullet.update()
           bullet.render()
         })
+				
+				//Check all relevant collisions
         handleEnemyBulletCollision(this.enemyBullets, this.player)
-        this.cursor.render()
         handlePowerUpCollision(this.player, this.powerups)
         handlePlayerEnemyCollision(this.player, this.enemies)
+				
+				//Spawn bullets for exploding enemies
         let explosion=handleBulletCollision(this.player, this.enemies, this.increasePoints)
         if (explosion){
           if (explosion.length>0){
@@ -285,13 +322,19 @@ class GameCanvas extends Component {
             })
           }
         }
+				
         this.removeDeadEnemies()
+        this.cursor.render()
       }
       if (this.display !== undefined && this.display !== null){
         this.display.render()
       }
+			
+			//Increases the frame counter in the store every frame
       this.props.incrementFrame()
     }
+		
+		//Stops animations if the current window or tab is not visible, otherwise call this function
     requestAnimationFrame(() => {this.update()})
   }
   render(){
@@ -304,7 +347,7 @@ class GameCanvas extends Component {
         {!(Object.entries(this.props.user).length === 0 && this.props.user.constructor === Object) && <Route exact path="/myhighscores" render={() => <MyHighscores />}></Route>}
         <canvas
           ref="canvas"
-          style={this.cursorStyle}
+          style={this.state.cursorStyle}
           width={ this.props.canvas.width * this.props.canvas.ratio }
           height={ this.props.canvas.height * this.props.canvas.ratio }
         />

@@ -1,3 +1,5 @@
+//Default enemy. Other enemies extend from this. Always points towards player and then updates position according to current speed
+
 import GamePiece from './GamePiece'
 import { calculateDirection } from '../helper'
 import store from '../store.js'

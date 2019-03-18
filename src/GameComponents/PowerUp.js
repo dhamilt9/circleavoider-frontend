@@ -1,3 +1,5 @@
+//Powerups can increase the player speed, points, shotspeed, or health based on their type.
+
 import store from '../store.js'
 import { provide } from 'js-redux';
 import { getRandomInt } from '../helper'

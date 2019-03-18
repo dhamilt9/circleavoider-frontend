@@ -1,6 +1,7 @@
+//Small flashing enemy that explodes into bullets that fire in 8 directions.
+
 import Enemy from './Enemy'
 import Bullet from './Bullet'
-import {calculateDirection} from '../helper.js'
 import store from '../store.js'
 import { provide } from 'js-redux';
 

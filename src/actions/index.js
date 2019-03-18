@@ -37,6 +37,7 @@ export const setGameId = (data) => {
     })
     .then(r=>r.json())
     .then(response=>{
+		console.log(response)
       dispatch({type: 'SET_GAME_ID', id: response.id})
     })
   }

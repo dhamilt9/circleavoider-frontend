@@ -1,3 +1,5 @@
+//The screen that displays on the canvas when the page is loaded. Contains game details and instructions, as well as buttons to start the game.
+
 import React, { Component } from 'react';
 
 import { Button } from 'react-bootstrap'

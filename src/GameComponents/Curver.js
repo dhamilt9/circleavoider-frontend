@@ -1,5 +1,7 @@
 import Enemy from './Enemy'
 
+//Uses a sin function on a 32 tic cicle to modify the direction to wiggle the enemy as it approaches the player
+
 export default class Curver extends Enemy{
   constructor(args){
     super(args)

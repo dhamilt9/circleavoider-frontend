@@ -1,3 +1,5 @@
+//Reducer for controlling the message on the Message react element
+
 const canvas = (state = {message: "", display: false}, action) =>
 {
   switch(action.type){

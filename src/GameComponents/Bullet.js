@@ -1,3 +1,5 @@
+//Bullets used by players and enemies. Probably should have extended GamePiece and uses the update and render functions there.
+
 import store from '../store.js'
 import { provide } from 'js-redux';
 import { calculateMove } from '../helper.js'

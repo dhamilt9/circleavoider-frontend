@@ -1,3 +1,8 @@
+//Displays the screen shown when player health has reached 0.
+//Contains buttons to reset the game and save the highscore
+//If highscore is saved while a player is logged in, the name on the highscore list will be the username
+//Otherwise it will be "Anonymous User"
+
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap'
 import { connect } from 'react-redux'

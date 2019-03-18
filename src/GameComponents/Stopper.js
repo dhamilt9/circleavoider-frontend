@@ -1,3 +1,5 @@
+//Enemy that runs on a cycle, stopping to shoot every 80 frames
+
 import Enemy from './Enemy'
 import Bullet from './Bullet'
 import {calculateDirection} from '../helper.js'
@@ -24,7 +26,8 @@ export default class Stopper extends Enemy{
         position: { x: this.position.x, y : this.position.y - 5 },
         speed: 3,
         radius: 4,
-        direction : calculateDirection(this.position, player.position)
+        direction : calculateDirection(this.position, player.position),
+		color: "red"
       });
       this.cycle+=1
       store.getState().gamestate.music.playEnemyShot()

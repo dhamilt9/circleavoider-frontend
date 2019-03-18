@@ -1,3 +1,5 @@
+//Main movement logic and rendering functions, extended by players and enemies
+
 import store from '../store.js'
 import { provide } from 'js-redux';
 

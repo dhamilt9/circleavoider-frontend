@@ -1,3 +1,5 @@
+//Class for the circle the player controls.
+
 import GamePiece from './GamePiece'
 import Bullet from './Bullet'
 import { calculateDirection } from '../helper.js'
@@ -7,6 +9,8 @@ import { provide } from 'js-redux';
 provide(store)
 
 export default class Player extends GamePiece{
+	
+	//Default values, tweaking these effects how the game plays and the controls feel
   constructor(args){
     super(args)
     this.score=0
@@ -25,7 +29,8 @@ export default class Player extends GamePiece{
     this.maxSpeed=3;
     this.deacceleration=.4;
   }
-
+	
+	//Run when the player collects a powerup. Changes player stats and displays a message based on the type of powerup
   collectPowerup = (type) => {
     store.getState().gamestate.music.playPickup()
     switch(type){
@@ -69,12 +74,15 @@ export default class Player extends GamePiece{
     }
   }
 
+	//Adjusts the players health when they take damage
   takeDamage = (damage) => {
     this.health=this.health-damage
     this.hitmarker=true
     this.lasthit=Date.now()
   }
 
+	//Shifts the movement direction of the player towards the direction the virtual 8-position joystick is pointing.
+	//Turns the player according to movement speed either clockwise or counterclockwise depending on which direction is faster.
   turnTowards = (joystickDirection) =>{
     if (joystickDirection!==null){
       let currentDirection=this.direction
@@ -212,6 +220,9 @@ export default class Player extends GamePiece{
     }
   }
 
+	
+	//If the joystick direction is opposite to the current movement direction, the circle "flips" instead by deaccelerating to a stop and then accelerating in the opposite direction.
+	//Otherwise, accelerate until max speed is hit while a movement key is pressed.  Deaccelerate otherwise.
   updateSpeed = (joystickDirection) => {
     let currentDirection=this.direction
     if (joystickDirection!==null){
@@ -274,7 +285,8 @@ export default class Player extends GamePiece{
       this.speed=0
     }
   }
-
+	
+	//Render all bullets currently shot by the player
   renderBullets() {
     this.bullets=this.bullets.filter((bullet) => {
       return bullet.alive===true
@@ -284,6 +296,8 @@ export default class Player extends GamePiece{
       bullet.render();
     })
   }
+	
+	//Turn the player towards the joystick direction, shoot bullets if a click is registered, claculates new position of player based on movement speed and direction
   update = (keys, joystickDirection, mouseClick) => {
     this.turnTowards(joystickDirection)
     this.updateSpeed(joystickDirection)
@@ -306,7 +320,7 @@ export default class Player extends GamePiece{
       this.lastShot = Date.now();
     }
   }
-
+	
   render(){
     super.render()
     this.renderBullets()

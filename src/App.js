@@ -1,3 +1,5 @@
+//Handles calling login functions from the store, contains GameCanvas and NavBar
+
 import React, { Component } from 'react';
 import './App.css';
 import GameCanvas from './GameCanvas.js'
@@ -13,7 +15,7 @@ class App extends Component {
     if (password===confirmpassword){
       this.props.register(username, password)
     }else{
-      console.log("Passwords do not match")
+      alert("Passwords do not match")
     }
   }
   logout = (event) => {
@@ -32,6 +34,7 @@ class App extends Component {
     if(token){
       this.props.tokenLogin(token)
     }
+	
   }
 
   render() {

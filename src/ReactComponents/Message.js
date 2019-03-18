@@ -1,6 +1,8 @@
+//A message that can be flashed on top of the canvas.  Used when a powerup is picked up. Can be toggled and set by redux.
+
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { toggleMessage, setMessage } from '../actions'
+import { toggleMessage } from '../actions'
 
 
 

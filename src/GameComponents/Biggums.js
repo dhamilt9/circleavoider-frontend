@@ -1,3 +1,6 @@
+//Big purple enemy. Only enemy that takes more than one shot to kill.
+//"Gets angrier" (shrinks and speeds up) every time it loses a health until dead.
+
 import Enemy from './Enemy'
 import store from '../store.js'
 

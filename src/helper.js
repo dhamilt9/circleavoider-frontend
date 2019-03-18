@@ -1,3 +1,5 @@
+//Helper functions, mostly math stuff (collision detection, vector math, etc), useful in many places of the app.
+
 import store from './store.js'
 import { provide } from 'js-redux';
 

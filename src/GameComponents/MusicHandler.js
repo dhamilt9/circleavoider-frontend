@@ -1,3 +1,6 @@
+//Plays sound effects and music with javascript Audio object.
+//Kept in the store so sounds can be used anywhere in the code
+
 export default class MusicHandler{
   constructor(){
     this.music=new Audio('music_loop_1.mp3')

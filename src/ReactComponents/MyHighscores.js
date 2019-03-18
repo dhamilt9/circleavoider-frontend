@@ -1,3 +1,5 @@
+//A list of the currently logged in user's high scores
+
 import React, { Component } from 'react';
 import Highscore from './Highscore'
 import { connect } from 'react-redux'
@@ -20,9 +22,9 @@ class MyHighscores extends Component {
   }
   render() {
     return (
-      <div id="high-scores">
-        <h1>Personal scores</h1>
-        <div id="high-scores-container">
+      <div className="overlay-container">
+        <div className="overlay-div">
+          <h1>Personal Scores</h1>
           {this.state.games.sort((a,b) => {return b.score-a.score}).slice(0,5).map((game, index)=>{
             return <Highscore key={game.id} score={game.score} username={game.username} index={index+1}/>
           })}

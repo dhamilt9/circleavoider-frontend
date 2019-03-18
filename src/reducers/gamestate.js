@@ -1,3 +1,5 @@
+//Reducer for information about the state of the current game being played.
+
 import InputManager from '../InputManager';
 import MusicHandler from '../GameComponents/MusicHandler'
 

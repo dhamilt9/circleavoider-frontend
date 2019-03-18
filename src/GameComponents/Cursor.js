@@ -1,3 +1,5 @@
+//The crosshair cursor on the canvas
+
 import store from '../store.js'
 import { provide } from 'js-redux';
 
